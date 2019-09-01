@@ -4,14 +4,13 @@ E [Ee][+-]?{D}+
 %{
 #include <math.h>
 #include "mcalc.tab.h"
-
 %}
 
-
 %%
+
 {D}*[.]?{D}+{E}?	{ yylval.val = yytext; return NUM; }
 
-[ \t\n]+	/* pula espacos em branco */
+[ \t]+	/* pula espacos em branco */
 
 #.*		/* comentarios simples */
 
@@ -21,8 +20,11 @@ E [Ee][+-]?{D}+
 [-]		{ return SUB; }
 [*]		{ return MUL; }
 [/]		{ return DIV; }
+[?]     { return IF; }
 
-.	{  fprintf(stderr, "Entrada ignorada\n-->%s\n", yytext); }
+[\n]    {  return END; }
+
+.       { fprintf(stderr, "Entrada ignorada\n-->%s\n", yytext); }
 
 %%
 

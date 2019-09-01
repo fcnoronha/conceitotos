@@ -1,7 +1,7 @@
-tudo: mcalc direto
+all: mcalc direto
 
-mcalc: mcalc.tab.o lex.yy.o main.o 
-	gcc -o $@ $^  -lfl
+mcalc: mcalc.tab.o lex.yy.o main.o
+	gcc -o $@ $^ -lfl
 
 mcalc.tab.o: mcalc.y
 	bison -d mcalc.y
@@ -15,4 +15,4 @@ direto: direto.rkt
 	raco exe $<
 
 clean:
-	rm -f *.o lex.yy.c mcalc.tab.c mcalc.tab.h direto *~
+	rm -f *.o lex.yy.c mcalc.tab.c mcalc.tab.h direto mcalc *~
