@@ -16,7 +16,7 @@ char *operIf(char *c, char *s, char *n) {
 }
 char *callFunc(char * nome, char * arg) {
 	char *res = malloc(strlen(nome)+strlen(arg)+10);
-	sprintf(res, "(%s (%s)", s, nome, arg);
+	sprintf(res, "(%s (%s)",  nome, arg);
 	return res;
 }
 char *dup(char *orig) {
