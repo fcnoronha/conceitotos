@@ -4,7 +4,7 @@ Projeto da disciplina MAC0316. Este é o projeto de uma calculadora implementada
 
 ## Grupo
 
-- Carolina Senra Marques - NUSP:
+- Carolina Senra Marques - NUSP: 10737101
 - Felipe Castro de Noronha - NUSP: 10737032
 - Raphael Ribeiro - NUSP:
 
