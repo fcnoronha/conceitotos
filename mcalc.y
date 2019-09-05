@@ -14,6 +14,11 @@ char *operIf(char *c, char *s, char *n) {
 	sprintf(res, "(if %s %s %s)", c, s, n);
 	return res;
 }
+char *callFunc(char * nome, char * arg) {
+	char *res = malloc(strlen(nome)+strlen(arg)+10);
+	sprintf(res, "(%s (%s)", s, nome, arg);
+	return res;
+}
 char *dup(char *orig) {
 	char *res = malloc(strlen(orig)+1);
 	strcpy(res,orig);
@@ -28,7 +33,7 @@ void yyerror(char *);
 }
 
 %token	<val> NUM
-%token  ADD SUB MUL DIV PRINT OPEN CLOSE IF
+%token  ADD SUB MUL DIV PRINT OPEN CLOSE IF CALL
 %type	<val> exp
 %token END 0 "end of file"
 
@@ -53,6 +58,7 @@ exp: 			NUM 		{ $$ = dup($1); }
 		| 		SUB exp %prec NEG   { $$ = oper('~', $2, "");}
         |       exp IF exp exp      { $$ = operIf($1, $3, $4);}
 		| 		OPEN exp CLOSE	    { $$ = dup($2);}
+		|       CALL exp exp		{ $$ = callFunc($2, $3);}
 ;
 
 %%

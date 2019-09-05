@@ -9,6 +9,9 @@
   [idC (s : symbol)]
   [appC (fun : symbol) (arg : ArithC)]
 
+(define-type FunDefC
+  [fdC [name : symbol] [arg : symbol] [body : ArithC]]
+  )
 
 (define-type ArithS
   [numS    (n : number)]
@@ -17,6 +20,7 @@
   [divS (l : ArithS) (r : ArithS)]
   [uminusS (e : ArithS)]
   [multS   (l : ArithS) (r : ArithS)]
+  [idS (s : symbol)]
   [ifS (c : ArithS) (s : ArithS) (n : ArithS)])
 
 
@@ -32,7 +36,7 @@
     ))
 
 
-(define (interp [a : ArithC]) : number
+(define (interp [a : ArithC]) [fds : [listof FunDefC] : number
   (type-case ArithC a
     [numC (n) n]
     [plusC (l r) (+ (interp l) (interp r))]
@@ -70,4 +74,15 @@
                    [(equal? n (fdC-name (first fds))) (first fds)]
                    [else (get-fundef n (rest fds))])]))
 
-(interp (desugar (parse (read))))
+(define biblioteca [list
+        [fdC 'dobro' 'x (plusC [idC 'x] [idC 'x])]
+        [fdC 'quadrado' 'y [multC [idC 'y] [idC 'y]]
+        [fdC 'fatorial' 'n (ifC (idC 'n) 
+        (multC (appC 'fatorial (plusC (idC 'n) (numC -1))) (idC 'n)) 
+        [fdC 'somaQuatro' 'x (plusC (idC 'x) 4)]
+        [fdC 'resposta' 'x (42)]
+        ]
+)
+
+
+(interp (desugar (parse (read))) biblioteca)
