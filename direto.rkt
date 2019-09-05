@@ -5,9 +5,9 @@
   [plusC (l : ArithC) (r : ArithC)]
   [divC (l : ArithC) (r : ArithC)]
   [multC (l : ArithC) (r : ArithC)]
-  [ifC (condição : ArithC) (sim : ArithC) (nao : ArithC)])
+  [ifC (condição : ArithC) (sim : ArithC) (nao : ArithC)]
   [idC (s : symbol)]
-  [appC (fun : symbol) (arg : ArithC)]
+  [appC (fun : symbol) (arg : ArithC)])
 
 (define-type FunDefC
   [fdC [name : symbol] [arg : symbol] [body : ArithC]]
@@ -27,6 +27,7 @@
 (define (desugar [as : ArithS]) : ArithC
   (type-case ArithS as
     [numS    (n)   (numC n)]
+    [idS (s) (idC s)]
     [plusS   (l r) (plusC (desugar l) (desugar r))]
     [multS   (l r) (multC (desugar l) (desugar r))]
     [divS   (l r) (divC (desugar l) (desugar r))]
@@ -36,19 +37,26 @@
     ))
 
 
-(define (interp [a : ArithC]) [fds : [listof FunDefC] : number
+(define (interp [a : ArithC] [fds : (listof FunDefC)]) : number
   (type-case ArithC a
     [numC (n) n]
-    [plusC (l r) (+ (interp l) (interp r))]
-    [divC (l r) (/ (interp l) (interp r))]
-    [multC (l r) (* (interp l) (interp r))]
-    [ifC (c s n) (if (zero? (interp c)) (interp n) (interp s))]
-    [appC (f a) (local ([define fd(get-fundef f fds)])
+    
+    [plusC (l r) (+ (interp l fds)
+                 (interp r fds))]
+    
+    [divC (l r) (/ (interp l fds) (interp r fds))]
+    
+    [multC (l r) (* (interp l fds) (interp r fds))]
+    
+    [ifC (c s n) (if (zero? (interp c fds)) (interp n fds) (interp s fds))]
+    
+    [appC (f a) (local ([define fd (get-fundef f fds)])
                   (interp (subst a
                                  (fdC-arg fd)
-                                 (fdC-body fd))
+                                 (fdC-body fd)
+                                 )
                            fds))]
-    [idc (_) (error 'interp "something wrong happened!")]
+    [idC (_) (error 'interp "something wrong happened!")]
     ))
 
 
@@ -76,9 +84,9 @@
 
 (define biblioteca [list
         [fdC 'dobro' 'x (plusC [idC 'x] [idC 'x])]
-        [fdC 'quadrado' 'y [multC [idC 'y] [idC 'y]]
+        [fdC 'quadrado' 'y [multC [idC 'y] [idC 'y]]]
         [fdC 'fatorial' 'n (ifC (idC 'n) 
-        (multC (appC 'fatorial (plusC (idC 'n) (numC -1))) (idC 'n)) 
+        (multC (appC 'fatorial (plusC (idC 'n) (numC -1))) (idC 'n)))] 
         [fdC 'somaQuatro' 'x (plusC (idC 'x) 4)]
         [fdC 'resposta' 'x (42)]
         ]
