@@ -6,6 +6,8 @@
   [divC (l : ArithC) (r : ArithC)]
   [multC (l : ArithC) (r : ArithC)]
   [ifC (condição : ArithC) (sim : ArithC) (nao : ArithC)])
+  [idC (s : symbol)]
+  [appC (fun : symbol) (arg : ArithC)]
 
 
 (define-type ArithS
@@ -37,6 +39,12 @@
     [divC (l r) (/ (interp l) (interp r))]
     [multC (l r) (* (interp l) (interp r))]
     [ifC (c s n) (if (zero? (interp c)) (interp n) (interp s))]
+    [appC (f a) (local ([define fd(get-fundef f fds)])
+                  (interp (subst a
+                                 (fdC-arg fd)
+                                 (fdC-body fd))
+                           fds))]
+    [idc (_) (error 'interp "something wrong happened!")]
     ))
 
 
@@ -55,5 +63,11 @@
          [else (error 'parse "invalid list input")]))]
     [else (error 'parse "invalid input")]))
 
+(define (get-fundef [n : symbol] [fds : (listof DunDefC)]) : FunDefC
+  (cond
+    [(empty? fds) (error 'get-fundef "function not found")]
+    [(cons? fds) (cond
+                   [(equal? n (fdC-name (first fds))) (first fds)]
+                   [else (get-fundef n (rest fds))])]))
 
 (interp (desugar (parse (read))))
