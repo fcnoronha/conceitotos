@@ -91,7 +91,7 @@
          [(call) (appS (s-exp->symbol (second sl)) (parse (third sl)))]
          [(if) (ifS (parse (second sl)) (parse (third sl)) (parse (fourth sl)))]
          [else (error 'parse "invalid list input")]))]
-    [else (error 'parse "invalid input")]))
+    [else (error 'parse (s-exp->string s))]))
 
 (define (get-fundef [n : symbol] [fds : (listof FunDefC)]) : FunDefC
   (cond

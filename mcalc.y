@@ -37,6 +37,7 @@ void yyerror(char *);
 %token SYMBOL
 %token  ADD SUB MUL DIV PRINT OPEN CLOSE IF
 %type	<val> exp
+%type <val> callfunc
 %type <val> SYMBOL
 %token END 0 "end of file"
 
@@ -54,8 +55,7 @@ input:
 ;
 
 exp: 			NUM 		{ $$ = dup($1); }
-		|       CALL SYMBOL NUM { $$ = callFunc($2, $3);}
-		|       SYMBOL       { $$ = dup($1);}
+		|       callfunc    { $$ = dup($1);}
 		| 		exp ADD exp	{ $$ = oper('+', $1, $3);}
 		| 		exp SUB exp	{ $$ = oper('-', $1, $3);}
 		| 		exp MUL exp	{ $$ = oper('*', $1, $3);}
@@ -65,6 +65,11 @@ exp: 			NUM 		{ $$ = dup($1); }
 		| 		OPEN exp CLOSE	    { $$ = dup($2);}
 
 ;
+
+callfunc:
+				CALL SYMBOL callfunc 		{$$ = callFunc($2,$3);}
+			|	CALL SYMBOL NUM			{ $$ = callFunc($2,$3);}
+		
 
 %%
 

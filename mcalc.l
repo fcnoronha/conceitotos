@@ -1,5 +1,5 @@
 D [0-9]
-E [Ee][+-]?{D}+
+L [a-zA-Z]
 
 %{
 #include <math.h>
@@ -8,14 +8,15 @@ E [Ee][+-]?{D}+
 
 %%
 
-{D}*[.]?{D}+{E}?	{ yylval.val = yytext; return NUM; }
+{D}*[.]?{D}+	{ yylval.val = strdup(yytext); return NUM; }
 
 [ \t]+	/* pula espacos em branco */
 
 #.*		/* comentarios simples */
 
+
 CALL  {return CALL;}
-[a-zA-Z]+ {yylval.val = yytext ;return SYMBOL;}
+{L}+ { yylval.val = strdup(yytext) ;return SYMBOL;}
 [(]		{ return OPEN; }
 [)]		{ return CLOSE; }
 [+]		{ return ADD; }
