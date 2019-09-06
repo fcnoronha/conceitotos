@@ -67,8 +67,7 @@ exp: 			NUM 		{ $$ = dup($1); }
 ;
 
 callfunc:
-				CALL SYMBOL callfunc 		{$$ = callFunc($2,$3);}
-			|	CALL SYMBOL NUM			{ $$ = callFunc($2,$3);}
+				CALL SYMBOL exp			{ $$ = callFunc($2,$3);}
 		
 
 %%
