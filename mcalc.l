@@ -14,6 +14,8 @@ E [Ee][+-]?{D}+
 
 #.*		/* comentarios simples */
 
+CALL  {return CALL;}
+[a-zA-Z]+ {yylval.val = yytext ;return SYMBOL;}
 [(]		{ return OPEN; }
 [)]		{ return CLOSE; }
 [+]		{ return ADD; }
@@ -21,7 +23,6 @@ E [Ee][+-]?{D}+
 [*]		{ return MUL; }
 [/]		{ return DIV; }
 [?]     { return IF; }
-
 [\n]    {  return END; }
 
 .       { fprintf(stderr, "Entrada ignorada\n-->%s\n", yytext); }

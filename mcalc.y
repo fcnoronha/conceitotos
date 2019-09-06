@@ -14,9 +14,9 @@ char *operIf(char *c, char *s, char *n) {
 	sprintf(res, "(if %s %s %s)", c, s, n);
 	return res;
 }
-char *callFunc(char * nome, char * arg) {
-	char *res = malloc(strlen(nome)+strlen(arg)+10);
-	sprintf(res, "(%s (%s)",  nome, arg);
+char *callFunc(char *nome, char*arg) {
+	char *res = malloc(strlen(nome)+strlen(arg)+12);
+	sprintf(res, "(call %s %s)", nome, arg);
 	return res;
 }
 char *dup(char *orig) {
@@ -33,8 +33,11 @@ void yyerror(char *);
 }
 
 %token	<val> NUM
-%token  ADD SUB MUL DIV PRINT OPEN CLOSE IF CALL
+%token CALL
+%token SYMBOL
+%token  ADD SUB MUL DIV PRINT OPEN CLOSE IF
 %type	<val> exp
+%type <val> SYMBOL
 %token END 0 "end of file"
 
 %left ADD SUB
@@ -51,6 +54,8 @@ input:
 ;
 
 exp: 			NUM 		{ $$ = dup($1); }
+		|       CALL SYMBOL NUM { $$ = callFunc($2, $3);}
+		|       SYMBOL       { $$ = dup($1);}
 		| 		exp ADD exp	{ $$ = oper('+', $1, $3);}
 		| 		exp SUB exp	{ $$ = oper('-', $1, $3);}
 		| 		exp MUL exp	{ $$ = oper('*', $1, $3);}
@@ -58,7 +63,7 @@ exp: 			NUM 		{ $$ = dup($1); }
 		| 		SUB exp %prec NEG   { $$ = oper('~', $2, "");}
         |       exp IF exp exp      { $$ = operIf($1, $3, $4);}
 		| 		OPEN exp CLOSE	    { $$ = dup($2);}
-		|       CALL exp exp		{ $$ = callFunc($2, $3);}
+
 ;
 
 %%

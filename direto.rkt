@@ -11,7 +11,7 @@
 
 (define-type FunDefC
   [fdC [name : symbol] [arg : symbol] [body : ArithC]]
-  )
+)
 
 (define-type ArithS
   [numS    (n : number)]
@@ -21,6 +21,7 @@
   [uminusS (e : ArithS)]
   [multS   (l : ArithS) (r : ArithS)]
   [idS (s : symbol)]
+  [appS (fun : symbol) (arg : ArithS)]
   [ifS (c : ArithS) (s : ArithS) (n : ArithS)])
 
 
@@ -28,6 +29,7 @@
   (type-case ArithS as
     [numS    (n)   (numC n)]
     [idS (s) (idC s)]
+    [appS    (fun arg) (appC fun (desugar arg))]
     [plusS   (l r) (plusC (desugar l) (desugar r))]
     [multS   (l r) (multC (desugar l) (desugar r))]
     [divS   (l r) (divC (desugar l) (desugar r))]
@@ -59,6 +61,21 @@
     [idC (_) (error 'interp "something wrong happened!")]
     ))
 
+(define (subst [valor : ArithC] [isso : symbol] [em : ArithC]) : ArithC
+  (type-case ArithC em
+    [numC (n) em]
+    [idC (s) (cond
+                [(symbol=? s isso) valor]
+                [else em]
+                )]
+    [appC (f a) (appC f (subst valor isso a))]
+    [plusC (l r) (plusC (subst valor isso l) (subst valor isso r))]
+    [multC (l r) (multC (subst valor isso l) (subst valor isso r))]
+    [divC (l r) (divC (subst valor isso l) (subst valor isso r))]
+    [ifC (c s n) (ifC (subst valor isso c)
+              (subst valor isso s) (subst valor isso n))]
+  )
+)
 
 (define (parse [s : s-expression]) : ArithS
   (cond
@@ -71,11 +88,12 @@
          [(/) (divS (parse (second sl)) (parse (third sl)))]
          [(-) (bminusS (parse (second sl)) (parse (third sl)))]
          [(~) (uminusS (parse (second sl)))]
+         [(call) (appS (s-exp->symbol (second sl)) (parse (third sl)))]
          [(if) (ifS (parse (second sl)) (parse (third sl)) (parse (fourth sl)))]
          [else (error 'parse "invalid list input")]))]
     [else (error 'parse "invalid input")]))
 
-(define (get-fundef [n : symbol] [fds : (listof DunDefC)]) : FunDefC
+(define (get-fundef [n : symbol] [fds : (listof FunDefC)]) : FunDefC
   (cond
     [(empty? fds) (error 'get-fundef "function not found")]
     [(cons? fds) (cond
@@ -83,13 +101,23 @@
                    [else (get-fundef n (rest fds))])]))
 
 (define biblioteca [list
-        [fdC 'dobro' 'x (plusC [idC 'x] [idC 'x])]
-        [fdC 'quadrado' 'y [multC [idC 'y] [idC 'y]]]
-        [fdC 'fatorial' 'n (ifC (idC 'n) 
-        (multC (appC 'fatorial (plusC (idC 'n) (numC -1))) (idC 'n)))] 
-        [fdC 'somaQuatro' 'x (plusC (idC 'x) 4)]
-        [fdC 'resposta' 'x (42)]
+        [fdC 'dobro 'x (plusC [idC 'x] [idC 'x])]
+        [fdC 'quadrado 'y [multC [idC 'y] [idC 'y]]]
+        [fdC 'fatorial 'n (ifC  (idC 'n) 
+             (multC (appC 'fatorial (plusC (idC 'n) (numC -1))) 
+                (idC 'n))
+             (numC 1))]
+        [fdC 'resposta 'x (numC 42) ]
+        [fdC 'fibo 'n (cond
+                        ( (eq? (idC 'n) (numC 0) ) (numC 0))
+                        ( (eq? (idC 'n) (numC 1) ) (numC 1))
+                        (else (plusC (appC 'fibo (plusC (idC 'n) (numC -1)))
+                                     (appC 'fibo (plusC (idC 'n) (numC -2))) 
+                              )
+                        )
+                      )
         ]
+      ]
 )
 
 
