@@ -60,6 +60,10 @@ $ ./tradutor | ./solver
 $ ./tradutor | ./solver
 > (CALL resposta 12)
 42
+
+$ ./tradutor | ./solver
+> (CALL fatorial 2 + (CALL fibo 3 + (CALL quadrado 2)))                  
+1307674368000
 ```
 
 ## Grupo
