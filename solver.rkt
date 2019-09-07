@@ -106,12 +106,13 @@
             (idC 'n))
         (numC 1))]
     [fdC 'resposta 'x (numC 42) ]
-    ; [fdC 'fibo 'n (cond
-    ;     ((idC 'n) (numC 0))
-    ;     ((eq? (idC 'n) (numC 1)) (numC 1))
-    ;     (else (plusC (appC 'fibo (plusC (idC 'n) (numC -1)))
-    ;                  (appC 'fibo (plusC (idC 'n) (numC -2)))
-    ;     )))]
-    ])
+    [fdC 'fibo 'n 
+    			(ifC (idC 'n) ( ifC (plusC (idC 'n) (numC -1)) 
+                                             (plusC (appC 'fibo (plusC (idC 'n) (numC -1)))
+                                                    (appC 'fibo (plusC (idC 'n) (numC -2))))
+                                             (numC 1)
+                                            )
+    							
+                            (numC 0))]])
 
 (interp (desugar (parse (read))) biblioteca)
