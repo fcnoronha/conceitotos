@@ -2,7 +2,7 @@
 
 Projeto da disciplina MAC0316. Este é o projeto de uma calculadora implementada em racket. A parte da gramatica é feita pelos arquivos `tradutor.`[l|y], que transformam uma expressão aritmetica convencional em sua representação na *notação polonesa*. A aplicação `solver.rkt` calcula o valor resultante da expressao que lhe foi passada.
 
-Optou-se por, alem de incluir o operador divisao e condicionais, criar 4 funcoes: `dobro`, `quadrado`, `fatorial` e `resposta`(*Answer to the Ultimate Question of Life, the Universe, and Everything*). A chamada dessas funcoes segue o formato `(CALL <nome> <arg>)`, como se pode ver nos exemplos. Já a condicional tem a forma `(<cond> ? <caso-sim> <caso-nao>)`, onde qualquer valor para cond diferente de 0 sera interpretado como 'sim'. A divisao pode ser realizada fazendo `(<expressao> / <expressao>)` e pode ser acompanhada de outras operacoes aritmeticas.
+Optou-se por, alem de incluir o operador divisao e condicionais, criar 5 funcoes: `dobro`, `quadrado`, `fatorial`, 'fibo e `resposta`(*Answer to the Ultimate Question of Life, the Universe, and Everything*). A chamada dessas funcoes segue o formato `(CALL <nome> <arg>)`, como se pode ver nos exemplos. Já a condicional tem a forma `(<cond> ? <caso-sim> <caso-nao>)`, onde qualquer valor para cond diferente de 0 sera interpretado como 'sim'. A divisao pode ser realizada fazendo `(<expressao> / <expressao>)` e pode ser acompanhada de outras operacoes aritmeticas.
 
 ## Como buildar
 
