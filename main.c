@@ -1,12 +1,6 @@
 int yyparse();
 int main()
 {
-  yyparse();
-  return 0; 
+    yyparse();
+    return 0;
 }
-
-
-
-
-
-

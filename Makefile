@@ -1,18 +1,18 @@
-all: mcalc direto
+all: tradutor solver
 
-mcalc: mcalc.tab.o lex.yy.o main.o
+tradutor: tradutor.tab.o lex.yy.o main.o
 	gcc -o $@ $^ -lfl
 
-mcalc.tab.o: mcalc.y
-	bison -d mcalc.y
-	gcc -c mcalc.tab.c
+tradutor.tab.o: tradutor.y
+	bison -d tradutor.y
+	gcc -c tradutor.tab.c
 
-lex.yy.o: mcalc.l
-	flex mcalc.l
+lex.yy.o: tradutor.l
+	flex tradutor.l
 	gcc -c lex.yy.c
 
-direto: direto.rkt
+solver: solver.rkt
 	raco exe $<
 
 clean:
-	rm -f *.o lex.yy.c mcalc.tab.c mcalc.tab.h direto mcalc *~
+	rm -f *.o lex.yy.c tradutor.tab.c tradutor.tab.h solver tradutor *~

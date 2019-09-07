@@ -1,16 +1,12 @@
-# Conceitos em linguagem de programação
+# Conceitos em linguagem de programação - Arith
 
-Projeto da disciplina MAC0316. Este é o projeto de uma calculadora implementada em racket. A parte da gramatica é feita pelos arquivos `mcalc.`[l|y], que transformam uma expressão aritmetica convencional em sua representação na *notação polonesa*. A aplicação `direto.rkt` calcula o valor resultante da expressao que lhe foi passada. Optou-se por, alem de incluir o operador divisao e condicionais, criar 4 funcoes : 'dobro', 'quadrado', 'fatorial' e 'resposta' (que sempre retorna 42). A chamada dessas funcoes segue o formato (CALL nome arg), como se pode ver nos exemplos. Ja a condicional tem a forma (cond ? sim nao), onde qualquer valor para cond diferente de 0 sera interpretado como 'sim'. A divisao pode ser realizada fazendo (x / y) e pode ser acompanhada de outras operacoes aritmeticas.
+Projeto da disciplina MAC0316. Este é o projeto de uma calculadora implementada em racket. A parte da gramatica é feita pelos arquivos `tradutor.`[l|y], que transformam uma expressão aritmetica convencional em sua representação na *notação polonesa*. A aplicação `solver.rkt` calcula o valor resultante da expressao que lhe foi passada.
 
-## Grupo
-
-- Carolina Senra Marques - NUSP: 10737101
-- Felipe Castro de Noronha - NUSP: 10737032
-- Raphael Ribeiro - NUSP: 10281601
+Optou-se por, alem de incluir o operador divisao e condicionais, criar 4 funcoes: `dobro`, `quadrado`, `fatorial` e `resposta`(*Answer to the Ultimate Question of Life, the Universe, and Everything*). A chamada dessas funcoes segue o formato `(CALL <nome> <arg>)`, como se pode ver nos exemplos. Já a condicional tem a forma `(<cond> ? <caso-sim> <caso-nao>)`, onde qualquer valor para cond diferente de 0 sera interpretado como 'sim'. A divisao pode ser realizada fazendo `(<expressao> / <expressao>)` e pode ser acompanhada de outras operacoes aritmeticas.
 
 ## Como buildar
 
-Precisamos instalar as dependencias e criar o executavel.
+Para executar o projeto precisamos instalar as dependencias e criar o executavel. Basta executar as seguintes linhas:
 
 ```terminal
 $ sudo apt-get install flex
@@ -22,47 +18,52 @@ $ make all
 
 ## Testes
 
-Para calcular uma expressão matematica, basta dar um *pipe* entre `mcalc` e `direto` e depois digitar a expressão. Por exemplo:
+Para calcular uma expressão matematica, basta dar um *pipe* entre `tradutor` e `solver` e depois digitar a expressão. A seguir, temos diversos exemplos da execução do programa:
 
 ```terminal
-$ ./mcalc | ./direto
+$ ./tradutor | ./solver
 > (6 / 2 + 4)
 7
 
-$ ./mcalc | ./direto
+$ ./tradutor | ./solver
 > (5 / 2 - 1)
 1 1/2
 
-$ ./mcalc | ./direto
-> (7 / 8 + 8)
-8 7/8
+$ ./tradutor | ./solver
+> (5 / (2 - 1))
+5
 
-$ ./mcalc | ./direto
+$ ./tradutor | ./solver
 > ((4 + 4) ? 2 4)
 2
 
-$ ./mcalc | ./direto
+$ ./tradutor | ./solver
 > ((4 - 4) ? 2 4)
 4
 
-$ ./mcalc | ./direto
+$ ./tradutor | ./solver
 > ((4 - 5) ? 0 1)
-1
+0
 
-$ ./mcalc | ./direto
+$ ./tradutor | ./solver
 > (CALL dobro 5)
 10
 
-$ ./mcalc | ./direto
+$ ./tradutor | ./solver
 > (CALL quadrado 10)
 100
 
-$ ./mcalc | ./direto
+$ ./tradutor | ./solver
 > (CALL fatorial 5)
 120
 
-$ ./mcalc | ./direto
+$ ./tradutor | ./solver
 > (CALL resposta 12)
 42
-
 ```
+
+## Grupo
+
+- Carolina Senra Marques - NUSP: 10737101
+- Felipe Castro de Noronha - NUSP: 10737032
+- Raphael Ribeiro - NUSP: 10281601

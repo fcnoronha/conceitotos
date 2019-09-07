@@ -3,7 +3,7 @@ L [a-zA-Z]
 
 %{
 #include <math.h>
-#include "mcalc.tab.h"
+#include "tradutor.tab.h"
 %}
 
 %%
@@ -14,9 +14,7 @@ L [a-zA-Z]
 
 #.*     /* comentarios simples */
 
-
-CALL  {return CALL;}
-{L}+ { yylval.val = strdup(yytext) ;return SYMBOL;}
+CALL    { return CALL; }
 [(]     { return OPEN; }
 [)]     { return CLOSE; }
 [+]     { return ADD; }
@@ -25,11 +23,8 @@ CALL  {return CALL;}
 [/]     { return DIV; }
 [?]     { return IF; }
 [\n]    {  return END; }
+{L}+    { yylval.val = strdup(yytext) ;return SYMBOL;}
 
 .       { fprintf(stderr, "Entrada ignorada\n-->%s\n", yytext); }
 
 %%
-
-/* Local Variables: */
-/* mode: c */
-/* End: */
