@@ -1,6 +1,6 @@
 # Conceitos em linguagem de programação
 
-Projeto da disciplina MAC0316. Este é o projeto de uma calculadora implementada em racket. A parte da gramatica é feita pelos arquivos `mcalc.`[l|y], que transformam uma expressão aritmetica convencional pela sua representação na *notação polonesa*. A aplicação `direto.rkt` calcula a expressão resultante.
+Projeto da disciplina MAC0316. Este é o projeto de uma calculadora implementada em racket. A parte da gramatica é feita pelos arquivos `mcalc.`[l|y], que transformam uma expressão aritmetica convencional em sua representação na *notação polonesa*. A aplicação `direto.rkt` calcula o valor resultante da expressao que lhe foi passada. Optou-se por, alem de incluir o operador divisao e condicionais, criar 4 funcoes : 'dobro', 'quadrado', 'fatorial' e 'resposta' (que sempre retorna 42). A chamada dessas funcoes segue o formato (CALL nome arg), como se pode ver nos exemplos. Ja a condicional tem a forma (cond ? sim nao), onde qualquer valor para cond diferente de 0 sera interpretado como 'sim'. A divisao pode ser realizada fazendo (x / y) e pode ser acompanhada de outras operacoes aritmeticas.
 
 ## Grupo
 
@@ -20,7 +20,7 @@ $ raco pkg install plai-typed
 $ make all
 ```
 
-## Como usar
+## Testes
 
 Para calcular uma expressão matematica, basta dar um *pipe* entre `mcalc` e `direto` e depois digitar a expressão. Por exemplo:
 
@@ -50,19 +50,19 @@ $ ./mcalc | ./direto
 1
 
 $ ./mcalc | ./direto
-> CALL dobro 5
+> (CALL dobro 5)
 10
 
 $ ./mcalc | ./direto
-> CALL quadrado 10
+> (CALL quadrado 10)
 100
 
 $ ./mcalc | ./direto
-> CALL fatorial 5
+> (CALL fatorial 5)
 120
 
 $ ./mcalc | ./direto
-> CALL resposta 12
+> (CALL resposta 12)
 42
 
 ```
