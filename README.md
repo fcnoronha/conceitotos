@@ -30,10 +30,39 @@ $ ./mcalc | ./direto
 14
 
 $ ./mcalc | ./direto
+> (5 / 2 - 1)
+1 1/2
+
+$ ./mcalc | ./direto
+> (7 * 8 + 8)
+64
+
+$ ./mcalc | ./direto
 > ((4 + 4) ? 2 4)
 2
 
 $ ./mcalc | ./direto
 > ((4 - 4) ? 2 4)
 4
+
+$ ./mcalc | ./direto
+> ((4 - 5) ? 0 1)
+1
+
+$ ./mcalc | ./direto
+> CALL dobro 5
+10
+
+$ ./mcalc | ./direto
+> CALL quadrado 10
+100
+
+$ ./mcalc | ./direto
+> CALL fatorial 5
+120
+
+$ ./mcalc | ./direto
+> CALL resposta 12
+42
+
 ```

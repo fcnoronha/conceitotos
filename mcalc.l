@@ -8,21 +8,21 @@ L [a-zA-Z]
 
 %%
 
-{D}*[.]?{D}+	{ yylval.val = strdup(yytext); return NUM; }
+{D}*[.]?{D}+    { yylval.val = strdup(yytext); return NUM; }
 
-[ \t]+	/* pula espacos em branco */
+[ \t]+  /* pula espacos em branco */
 
-#.*		/* comentarios simples */
+#.*     /* comentarios simples */
 
 
 CALL  {return CALL;}
 {L}+ { yylval.val = strdup(yytext) ;return SYMBOL;}
-[(]		{ return OPEN; }
-[)]		{ return CLOSE; }
-[+]		{ return ADD; }
-[-]		{ return SUB; }
-[*]		{ return MUL; }
-[/]		{ return DIV; }
+[(]     { return OPEN; }
+[)]     { return CLOSE; }
+[+]     { return ADD; }
+[-]     { return SUB; }
+[*]     { return MUL; }
+[/]     { return DIV; }
 [?]     { return IF; }
 [\n]    {  return END; }
 
