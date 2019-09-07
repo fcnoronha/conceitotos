@@ -6,7 +6,7 @@ Projeto da disciplina MAC0316. Este é o projeto de uma calculadora implementada
 
 - Carolina Senra Marques - NUSP: 10737101
 - Felipe Castro de Noronha - NUSP: 10737032
-- Raphael Ribeiro - NUSP:
+- Raphael Ribeiro - NUSP: 10281601
 
 ## Como buildar
 
@@ -26,16 +26,16 @@ Para calcular uma expressão matematica, basta dar um *pipe* entre `mcalc` e `di
 
 ```terminal
 $ ./mcalc | ./direto
-> (5 * 2 + 4)
-14
+> (6 / 2 + 4)
+7
 
 $ ./mcalc | ./direto
 > (5 / 2 - 1)
 1 1/2
 
 $ ./mcalc | ./direto
-> (7 * 8 + 8)
-64
+> (7 / 8 + 8)
+8 7/8
 
 $ ./mcalc | ./direto
 > ((4 + 4) ? 2 4)
