@@ -20,9 +20,13 @@ $ make all
 
     Vamos deixar as coisas que vao ter que ser incluidas no relatorio aq. Tem que escrever de um jeito mais bonitinho dps
 
-- Foi adicionado um enviroment, #escopoDinamico
+- Foi adicionado um environment, #escopoDinamico
 - Nomeclatura foi mudada, não é mais arit, e sim expr
 - Não temos mais uma bib de funções, agora elas são implementadas no core da linguagem
+- Foi criada a closure, o pacote funcao + environment
+	- fdC se tornou lamC
+	- nomes para as funcoes se tornaram desnecessarios
+- Foram criadas as Boxes
 
 ## Testes
 
