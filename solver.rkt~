@@ -35,7 +35,6 @@
     [lamS    (arg : symbol) (body : ExprS)]
     [setS    (var : symbol) (arg : ExprS)]
     [seqS    (b1 : ExprS) (b2 : ExprS)]
-    [letS    (id : symbol) (arg : ExprS) (body : ExprS)]
 )
 
 ; desaçucarador
@@ -53,7 +52,6 @@
     [ifS     (c s n) (ifC (desugar c) (desugar s) (desugar n))]
     [setS    (v a) (setC v (desugar a))]
     [seqS    (b1 b2) (seqC (desugar b1) (desugar b2))]
-    [letS    (id arg expr) (lamC id (desugar expr))]
 ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -207,8 +205,6 @@
                 [(call) (appS (parse (second sl)) (parse (third sl)))]
                 [(:=)   (setS (s-exp->symbol (second sl)) (parse (third sl)))]
                 [(seq)  (seqS (parse (second sl)) (parse (third sl)))]
-                [(def) (seqS (setS (s-exp->symbol (second sl)) (numS -1) )
-                      (setS (s-exp->symbol (second sl) ) (lamS (s-exp->symbol (third sl)) (parse (fourth sl)))))]
                 [else (error 'parse "invalid list input")]))]
     [else (error 'parse (s-exp->string s))]))
 
@@ -226,8 +222,7 @@
 ; FUNÇÕES DA LINGUAGEM
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;(numV-n (v*s-v (interpS '(seq (:= oi (func x (+ x x))) 4))))
-
+(numV-n (v*s-v (interpS '(seq (:= oi (func x (+ x x))) 4))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; EXECUTANDO A ROTINA
