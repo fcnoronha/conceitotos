@@ -21,6 +21,24 @@ char *callFunc(char *nome, char*arg) {
     return res;
 }
 
+char *atrib(char *nome, char*value) {
+    char *res = malloc(strlen(nome)+strlen(value)+16);
+    sprintf(res, "(:= %s (%s))", nome, value);
+    return res;
+}
+
+char *seq(char *exp1, char*exp2) {
+    char *res = malloc(strlen(exp1)+strlen(exp2)+16);
+    sprintf(res, "(seq (%s) (%s))", exp1, exp2);
+    return res;
+}
+
+char *funcDef(char *nome, char*arg, char*body) {
+    char *res = malloc(strlen(nome)+strlen(arg)+22);
+    sprintf(res, "(def %s %s (%s))", nome, arg, body);
+    return res;
+}
+
 char *dup(char *orig) {
     char *res = malloc(strlen(orig)+1);
     strcpy(res,orig);
@@ -39,10 +57,19 @@ void yyerror(char *);
 %token  <val> NUM
 %token CALL
 %token SYMBOL
+%token SEQ
+%token DEF
+%token ATRIB
 %token ADD SUB MUL DIV PRINT OPEN CLOSE IF
 %type <val> exp
 %type <val> SYMBOL
-%type <val> CALLFUNC
+%type <val> callfunc
+%type <val> atrib
+%type <val> seq
+%type <val> funcdef
+%type <val> ATRIB
+%type <val> SEQ
+%type <val> DEF
 %token END 0 "end of file"
 
 %left ADD SUB
@@ -59,7 +86,10 @@ input:
 ;
 
 exp:            NUM         { $$ = dup($1);}
-        |       CALLFUNC    { $$ = dup($1);}
+        |       callfunc    { $$ = dup($1);}
+        |       funcdef     { $$ = dup($1);}
+        |       atrib       { $$ = dup($1);}
+        |       seq         { $$ = dup($1);}
         |       exp ADD exp { $$ = oper('+', $1, $3);}
         |       exp SUB exp { $$ = oper('-', $1, $3);}
         |       exp MUL exp { $$ = oper('*', $1, $3);}
@@ -69,8 +99,20 @@ exp:            NUM         { $$ = dup($1);}
         |       OPEN exp CLOSE      { $$ = dup($2);}
 ;
 
-CALLFUNC:
-                CALL SYMBOL exp     { $$ = callFunc($2, $3);}
+callfunc:
+                CALL SYMBOL exp     { $$ = callFunc(dup($2), dup($3));}
+;
+
+atrib:
+                ATRIB SYMBOL exp    { $$ = atrib(dup($2), dup($3));}
+;
+
+seq:
+                SEQ exp exp         { $$ = seq(dup($2), dup($3));}
+;
+
+funcdef:
+                DEF SYMBOL exp exp   { $$ = funcDef(dup($2), dup($3), dup($4));}
 ;
 
 %%

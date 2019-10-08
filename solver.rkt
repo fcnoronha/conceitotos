@@ -203,7 +203,6 @@
                 [(-)    (bminusS (parse (second sl)) (parse (third sl)))]
                 [(~)    (uminusS (parse (second sl)))]
                 [(if)   (ifS (parse (second sl)) (parse (third sl)) (parse (fourth sl)))]
-                [(func) (lamS (s-exp->symbol (second sl)) (parse (third sl)))]
                 [(call) (appS (parse (second sl)) (parse (third sl)))]
                 [(:=)   (setS (s-exp->symbol (second sl)) (parse (third sl)))]
                 [(seq)  (seqS (parse (second sl)) (parse (third sl)))]

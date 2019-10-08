@@ -15,6 +15,9 @@ L [a-zA-Z]
 #.*     /* comentarios simples */
 
 CALL    { return CALL; }
+:=		{ return ATRIB; }
+DEF     { return DEF;   }
+SEQ     { return SEQ;   }
 [(]     { return OPEN; }
 [)]     { return CLOSE; }
 [+]     { return ADD; }
