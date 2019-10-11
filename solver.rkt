@@ -53,7 +53,7 @@
     [ifS     (c s n) (ifC (desugar c) (desugar s) (desugar n))]
     [setS    (v a) (setC v (desugar a))]
     [seqS    (b1 b2) (seqC (desugar b1) (desugar b2))]
-    [letS    (id arg expr) (lamC id (desugar expr))]
+    [letS    (id val expr) (appC  (lamC id (desugar expr)) (desugar val))]
 ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -206,8 +206,8 @@
                 [(call) (appS (parse (second sl)) (parse (third sl)))]
                 [(:=)   (setS (s-exp->symbol (second sl)) (parse (third sl)))]
                 [(seq)  (seqS (parse (second sl)) (parse (third sl)))]
-                [(def) (seqS (setS (s-exp->symbol (second sl)) (numS -1) )
-                      (setS (s-exp->symbol (second sl) ) (lamS (s-exp->symbol (third sl)) (parse (fourth sl)))))]
+                [(def) (letS (s-exp->symbol (second sl)) (parse (third sl)) (parse (fourth sl)))]
+                [(func) (lamS (s-exp->symbol (second sl)) (parse (third sl)))]
                 [else (error 'parse "invalid list input")]))]
     [else (error 'parse (s-exp->string s))]))
 
@@ -222,14 +222,7 @@
 (define (interpS [s : s-expression]) (interp (desugar (parse s)) mt-env mt-store))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; FUNÇÕES DA LINGUAGEM
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;(numV-n (v*s-v (interpS '(seq (:= oi (func x (+ x x))) 4))))
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; EXECUTANDO A ROTINA
+; EXECUTANDO A ROTINA COM AS FUNÇÕES DA LINGUAGEM
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (numV-n (v*s-v (interpS (read))))

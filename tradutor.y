@@ -23,21 +23,30 @@ char *callFunc(char *nome, char*arg) {
 
 char *atrib(char *nome, char*value) {
     char *res = malloc(strlen(nome)+strlen(value)+16);
-    sprintf(res, "(:= %s (%s))", nome, value);
+    sprintf(res, "(:= %s %s)", nome, value);
     return res;
 }
 
 char *seq(char *exp1, char*exp2) {
     char *res = malloc(strlen(exp1)+strlen(exp2)+16);
-    sprintf(res, "(seq (%s) (%s))", exp1, exp2);
+    sprintf(res, "(seq %s %s)", exp1, exp2);
+    fprintf(stderr, "%s\n", res);
+    return res;
+}
+
+char *define(char *symbol, char*value, char*exp) {
+    char *res = malloc(strlen(symbol)+strlen(value)+strlen(exp)+26);
+    sprintf(res, "(def %s %s %s)", symbol, value, exp);
     return res;
 }
 
 char *funcDef(char *nome, char*arg, char*body) {
-    char *res = malloc(strlen(nome)+strlen(arg)+22);
-    sprintf(res, "(def %s %s (%s))", nome, arg, body);
+    char *res = malloc(strlen(nome)+strlen(arg)+strlen(body)+30);
+    sprintf(res, "(def %s -1 (:= %s (func %s %s)) )", nome, nome, arg, body);
     return res;
 }
+
+
 
 char *dup(char *orig) {
     char *res = malloc(strlen(orig)+1);
@@ -60,6 +69,10 @@ void yyerror(char *);
 %token SEQ
 %token DEF
 %token ATRIB
+%token OPENFUNC
+%token CLOSEFUNC
+%token LET
+%token FUNC
 %token ADD SUB MUL DIV PRINT OPEN CLOSE IF
 %type <val> exp
 %type <val> SYMBOL
@@ -67,10 +80,9 @@ void yyerror(char *);
 %type <val> atrib
 %type <val> seq
 %type <val> funcdef
-%type <val> ATRIB
-%type <val> SEQ
-%type <val> DEF
-%token END 0 "end of file"
+%type <val> def
+%token NEWLINE
+%token END 0
 
 %left ADD SUB
 %left MUL DIV
@@ -86,10 +98,13 @@ input:
 ;
 
 exp:            NUM         { $$ = dup($1);}
+        
+        |       SYMBOL      { $$ = dup($1);}
         |       callfunc    { $$ = dup($1);}
         |       funcdef     { $$ = dup($1);}
         |       atrib       { $$ = dup($1);}
         |       seq         { $$ = dup($1);}
+        |       def         { $$ = dup($1);}
         |       exp ADD exp { $$ = oper('+', $1, $3);}
         |       exp SUB exp { $$ = oper('-', $1, $3);}
         |       exp MUL exp { $$ = oper('*', $1, $3);}
@@ -103,17 +118,28 @@ callfunc:
                 CALL SYMBOL exp     { $$ = callFunc(dup($2), dup($3));}
 ;
 
+def:
+                DEF SYMBOL ATRIB exp SEQ exp { $$ = define(dup($2), dup($4), dup($6));}
+            |   DEF SYMBOL ATRIB exp SEQ NEWLINE exp { $$ = define(dup($2), dup($4), dup($7));}
+;
+
 atrib:
-                ATRIB SYMBOL exp    { $$ = atrib(dup($2), dup($3));}
+                SYMBOL ATRIB OPEN exp CLOSE    { $$ = atrib(dup($1), dup($4));}
 ;
 
 seq:
-                SEQ exp exp         { $$ = seq(dup($2), dup($3));}
+                exp SEQ             { $$ = dup($1);}
+            |   exp SEQ exp         { $$ = seq(dup($1), dup($3));}
+            |   exp SEQ NEWLINE exp { $$ = seq(dup($1), dup($4));}
+            |   exp SEQ NEWLINE     { $$ = dup($1);}
+
 ;
 
 funcdef:
-                DEF SYMBOL exp exp   { $$ = funcDef(dup($2), dup($3), dup($4));}
+                FUNC SYMBOL OPEN SYMBOL CLOSE OPENFUNC exp CLOSEFUNC  { $$ = funcDef(dup($2), dup($4), dup($7));}
 ;
+
+
 
 %%
 

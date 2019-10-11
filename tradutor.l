@@ -15,18 +15,24 @@ L [a-zA-Z]
 #.*     /* comentarios simples */
 
 CALL    { return CALL; }
-:=		{ return ATRIB; }
-DEF     { return DEF;   }
-SEQ     { return SEQ;   }
+:=		{  return ATRIB; }
+LET     { return DEF;   }
+FUNC    { return FUNC;  }
+;       { return SEQ;   }
+FIM     { return END; }
+{L}+    { yylval.val = strdup(yytext) ;return SYMBOL;}
 [(]     { return OPEN; }
 [)]     { return CLOSE; }
+[{]     { return OPENFUNC; }
+[}]     { return CLOSEFUNC; }
 [+]     { return ADD; }
 [-]     { return SUB; }
 [*]     { return MUL; }
 [/]     { return DIV; }
 [?]     { return IF; }
-[\n]    {  return END; }
-{L}+    { yylval.val = strdup(yytext) ;return SYMBOL;}
+[\n]    {  return NEWLINE; }
+
+
 
 .       { fprintf(stderr, "Entrada ignorada\n-->%s\n", yytext); }
 
