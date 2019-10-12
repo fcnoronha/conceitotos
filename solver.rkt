@@ -160,7 +160,7 @@
             (type-case Result (interp l env sto)
                 [v*s (v-l s-l)
                     (type-case Result (interp r env s-l)
-                        [v*s (v-r s-r) (v*s (num/ v-l v-r) s-r)])])]
+                        [v*s (v-r s-r) (v*s (num* v-l v-r) s-r)])])]
         [ifC (c s n) (if (zero? (numV-n (v*s-v (interp c env sto))))
                             (interp n env sto)
                             (interp s env sto))]
@@ -228,4 +228,10 @@
 ; EXECUTANDO A ROTINA COM AS FUNÇÕES DA LINGUAGEM
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(numV-n (v*s-v (interpS (read))))
+
+
+(numV-n (v*s-v (interp ( desugar (letS 'dobro (numS -1)
+                                 (seqS (setS 'dobro (lamS 'x (plusS (varS 'x) (varS 'x)) ))
+                                 (letS 'quadrado (numS -1)
+                                 (seqS (setS 'quadrado (lamS 'y (multS (varS 'y) (varS 'y))))
+                                       (parse (read) )))))) mt-env mt-store)))
