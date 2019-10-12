@@ -98,6 +98,7 @@ input:
 
 exp:            NUM         { $$ = dup($1);}
         |       NEWLINE exp { $$ = dup($2);}
+        |       exp NEWLINE { $$ = dup($1);}
         |       SYMBOL      { $$ = dup($1);}
         |       callfunc    { $$ = dup($1);}
         |       funcdef     { $$ = dup($1);}
@@ -114,7 +115,7 @@ exp:            NUM         { $$ = dup($1);}
 ;
 
 callfunc:
-                CALL SYMBOL exp     { $$ = callFunc(dup($2), dup($3));}
+                CALL SYMBOL OPEN exp CLOSE     { $$ = callFunc(dup($2), dup($4));}
 ;
 
 def:

@@ -231,7 +231,27 @@
 
 
 (numV-n (v*s-v (interp ( desugar (letS 'dobro (numS -1)
-                                 (seqS (setS 'dobro (lamS 'x (plusS (varS 'x) (varS 'x)) ))
+                                 (seqS (setS 'dobro
+                                             (lamS 'x (plusS (varS 'x) (varS 'x)) ))
                                  (letS 'quadrado (numS -1)
-                                 (seqS (setS 'quadrado (lamS 'y (multS (varS 'y) (varS 'y))))
-                                       (parse (read) )))))) mt-env mt-store)))
+                                 (seqS (setS 'quadrado
+                                             (lamS 'y (multS (varS 'y) (varS 'y))))
+                                 (letS 'fatorial (numS -1)
+                                 (seqS (setS 'fatorial
+                                             (lamS 'n (ifS (varS 'n)
+                                                           (multS (varS 'n)
+                                                                  (appS (varS 'fatorial)
+                                                                        (plusS (varS 'n) (numS -1))))
+                                                           (numS 1))))
+                                 (letS 'resposta (numS -1)
+                                 (seqS (setS 'resposta
+                                             (lamS 'x (numS 42)))
+                                 (letS 'fibo (numS -1)
+                                 (seqS (setS 'fibo
+                                             (lamS 'n (ifS (varS 'n)
+                                                           (ifS (plusS (varS 'n) (numS -1))
+                                                                (plusS (appS (varS 'fibo) (plusS (varS 'n) (numS -1)))
+                                                                       (appS (varS 'fibo) (plusS (varS 'n) (numS -2))))
+                                                                (numS 1))
+                                                           (numS 0))))
+                                       (parse (read))))))))))))) mt-env mt-store)))

@@ -1,14 +1,12 @@
 # Conceitos em linguagem de programação - Arith
 
-Projeto da disciplina MAC0316. Este é o projeto de uma calculadora implementada em racket. A parte da gramatica é feita pelos arquivos `tradutor.`[l|y], que transformam uma expressão aritmetica convencional em sua representação na *notação polonesa*. A aplicação `solver.rkt` calcula o valor resultante da expressao que lhe foi passada.
-
-Optou-se por, alem de incluir o operador divisao e condicionais, criar 5 funcoes: `dobro`, `quadrado`, `fatorial`, `fibo` e `resposta`(*Answer to the Ultimate Question of Life, the Universe, and Everything*). A chamada dessas funcoes segue o formato `(CALL <nome> <arg>)`, como se pode ver nos exemplos. Já a condicional tem a forma `(<cond> ? <caso-sim> <caso-nao>)`, onde qualquer valor para cond diferente de 0 sera interpretado como 'sim'. A divisao pode ser realizada fazendo `(<expressao> / <expressao>)` e pode ser acompanhada de outras operacoes aritmeticas.
+Projeto da disciplina MAC0316. Este é o projeto de uma linguagem simples implementada em racket. A parte da gramatica é feita pelos arquivos `tradutor.`[l|y], que transformam a gramática explícita da linguagem em uma linguagem interna para ser interpretada por `solver.rkt` 
 
 ## Como buildar
 
 Para executar o projeto precisamos instalar as dependencias e criar o executavel. Basta executar as seguintes linhas:
 
-```terminal
+```shell
 $ sudo apt-get install flex
 $ sudo apt-get install bison
 $ sudo apt-get install racket
@@ -18,65 +16,124 @@ $ make all
 
 ## Segundo compilador
 
-    Vamos deixar as coisas que vao ter que ser incluidas no relatorio aq. Tem que escrever de um jeito mais bonitinho dps
-
-- Foi adicionado um environment, #escopoDinamico
+- Foi adicionado um environment de escopo dinâmico.
 - Nomeclatura foi mudada, não é mais arit, e sim expr
-- Não temos mais uma bib de funções, agora elas são implementadas no core da linguagem
+- Não temos mais uma biblioteca de funções, agora elas são implementadas no core da linguagem
 - Foi criada a closure, o pacote funcao + environment
 	- fdC se tornou lamC
-	- nomes para as funcoes se tornaram desnecessarios
+	- nomes para as funcoes se tornaram desnecessarios. Apesar disso, na gramática explicíta exigimos que todas funções tenham nome.
 - Foram criadas as Boxes
+- Todas funções sao associadas a um simbolo, recursivas ou não.
 
-## Testes
+## A Linguagem
 
-Para calcular uma expressão matematica, basta dar um *pipe* entre `tradutor` e `solver` e depois digitar a expressão. A seguir, temos diversos exemplos da execução do programa:
+Para chamar nosso compilador, basta dar um *pipe* entre `tradutor` e `solver` e depois digitar a expressão. 
 
-```terminal
+Todos os comandos devem ser finalizados com ";" e para terminar o programa utiliza-se o comando FIM
+
+O ";" cria o sequenciamento entre comandos.
+
+#### 0) Operações Básicas
+
+Os operadores básicos são *, /, +, -, responsáveis respectivamente por multiplicação, divisão, soma e subtração de expressões.
+
+Para realizar uma operação, utiliza-se *expressao1* *operador* *expressao2*. 
+
+Exemplos:
+
+3*6
+
+4*(10/2)
+
+Além disso, existe o operador IF condicional, sua sintaxe é 
+
+(*condicao*) ? (*casoVerdadeiro*) (*casoFalso*)
+
+Se condicao é igual a 0, casoFalso é executado. Caso contrário, casoVerdadeiro é executado.
+
+#### 1) Criação de variáveis e mutação
+
+Para definir uma variável, utiliza-se a sintaxe LET *nomevariavel* := (*valorinicial*); 
+
+Para mudar o valor da variável, utiliza-se *nomevariavel* := (*novovalor*);
+
+Exemplos:
+
+```bash
 $ ./tradutor | ./solver
-> (6 / 2 + 4)
-7
-
-$ ./tradutor | ./solver
-> (5 / 2 - 1)
-1 1/2
-
-$ ./tradutor | ./solver
-> (5 / (2 - 1))
+> LET x := (4);
+> x+1;
+> FIM;
 5
 
 $ ./tradutor | ./solver
-> ((4 + 4) ? 2 4)
+> LET x := (2);
+> LET y := (3);
+> x := (x+y);
+> FIM
+5
+
+$ ./tradutor | ./solver
+> LET x := (2+(5*3));
+> LET y := (x + (5+2));
+> x := (x+2);
+> x+y;
+> FIM
+43
+```
+
+#### 2) Funções
+
+Para definir uma função, a sintaxe é FUNC *nomefuncao* (*parametro*) {*corpo*};
+
+Para chamar uma função, utiliza-se CALL *nomefuncao* (*parametro*); 
+
+As funções pré-implementadas são 
+
+1. dobro(x) : retorna o dobro de x
+2. quadrado(x) : retorna o quadrado de x
+3. fatorial(n) : retorna o valor do fatorial de n
+4. resposta(x) : recebe um valor de x e retorna a resposta para a vida, o universo e tudo mais.
+5. fibo(n) : retorna o n-ésimo número de fibonnaci.
+
+Exemplos:
+
+```shell
+$ ./tradutor | ./solver
+> FUNC somaUm(x){
+>	x+1;
+> };
+> CALL somaUm(1);
+> FIM
 2
 
 $ ./tradutor | ./solver
-> ((4 - 4) ? 2 4)
-4
+> FUNC funcaoSofisticada(x){
+>	LET y := (x+1);
+>	y;
+> };
+> CALL funcaoSofisticada(1);
+> FIM
+2
 
 $ ./tradutor | ./solver
-> ((4 - 5) ? 0 1)
-0
-
-$ ./tradutor | ./solver
-> (CALL dobro 5)
-10
-
-$ ./tradutor | ./solver
-> (CALL quadrado 10)
-100
-
-$ ./tradutor | ./solver
-> (CALL fatorial 5)
-120
-
-$ ./tradutor | ./solver
-> (CALL resposta 12)
-42
-
-$ ./tradutor | ./solver
-> (CALL fatorial 2 + (CALL fibo 3 + (CALL quadrado 2)))
-1307674368000
+FUNC tribonacci(x){
+    x ? 
+      ((x-1) ? 
+            ((x-2) ? 
+              ( (CALL tribonacci(x-1)) + (CALL tribonacci(x-2)) + (CALL tribonacci(x-3)))
+              (2)
+              )
+            (1)
+              )
+          (0);
+};
+> CALL tribonacci(5);
+> FIM
+11
 ```
+
+
 
 ## Grupo
 
