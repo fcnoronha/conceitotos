@@ -98,7 +98,7 @@ As funções pré-implementadas são
 
 Exemplos:
 
-```shell
+```bash
 $ ./tradutor | ./solver
 > FUNC somaUm(x){
 >	x+1;
