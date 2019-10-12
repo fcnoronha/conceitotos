@@ -35,7 +35,6 @@
     [lamS    (arg : symbol) (body : ExprS)]
     [setS    (var : symbol) (arg : ExprS)]
     [seqS    (b1 : ExprS) (b2 : ExprS)]
-    [letS    (id : symbol) (arg : ExprS) (body : ExprS)]
 )
 
 ; desaçucarador
@@ -53,7 +52,6 @@
     [ifS     (c s n) (ifC (desugar c) (desugar s) (desugar n))]
     [setS    (v a) (setC v (desugar a))]
     [seqS    (b1 b2) (seqC (desugar b1) (desugar b2))]
-    [letS    (id val expr) (appC  (lamC id (desugar expr)) (desugar val))]
 ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -160,7 +158,7 @@
             (type-case Result (interp l env sto)
                 [v*s (v-l s-l)
                     (type-case Result (interp r env s-l)
-                        [v*s (v-r s-r) (v*s (num* v-l v-r) s-r)])])]
+                        [v*s (v-r s-r) (v*s (num/ v-l v-r) s-r)])])]
         [ifC (c s n) (if (zero? (numV-n (v*s-v (interp c env sto))))
                             (interp n env sto)
                             (interp s env sto))]
@@ -203,14 +201,10 @@
                 [(-)    (bminusS (parse (second sl)) (parse (third sl)))]
                 [(~)    (uminusS (parse (second sl)))]
                 [(if)   (ifS (parse (second sl)) (parse (third sl)) (parse (fourth sl)))]
+                [(func) (lamS (s-exp->symbol (second sl)) (parse (third sl)))]
                 [(call) (appS (parse (second sl)) (parse (third sl)))]
                 [(:=)   (setS (s-exp->symbol (second sl)) (parse (third sl)))]
                 [(seq)  (seqS (parse (second sl)) (parse (third sl)))]
-                [(def) (letS (s-exp->symbol (second sl)) (parse (third sl)) (parse (fourth sl)))]
-                [(func) (letS (s-exp->symbol (second sl)) (numS -1)
-                                (seqS (setS (s-exp->symbol (second sl))
-                                (lamS (s-exp->symbol(third sl)) (parse (fourth sl))))
-                                (parse (list-ref sl 4) )) )  ]
                 [else (error 'parse "invalid list input")]))]
     [else (error 'parse (s-exp->string s))]))
 
@@ -218,35 +212,20 @@
 ; AÇUCAR RACKETIZADO
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+; aqui seria legal definir uns açucares usando o define.
+; coisas que seriam legais:
+;   criar variavel e ja definir valor pra ela
+
 (define (interpS [s : s-expression]) (interp (desugar (parse s)) mt-env mt-store))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; EXECUTANDO A ROTINA COM AS FUNÇÕES DA LINGUAGEM
+; FUNÇÕES DA LINGUAGEM
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(numV-n (v*s-v (interp ( desugar
-    (letS 'dobro (numS -1)
-         (seqS (setS 'dobro
-                     (lamS 'x (plusS (varS 'x) (varS 'x)) ))
-    (letS 'quadrado (numS -1)
-         (seqS (setS 'quadrado
-                     (lamS 'y (multS (varS 'y) (varS 'y))))
-    (letS 'fatorial (numS -1)
-         (seqS (setS 'fatorial
-                     (lamS 'n (ifS (varS 'n)
-                                   (multS (varS 'n)
-                                          (appS (varS 'fatorial)
-                                                (plusS (varS 'n) (numS -1))))
-                                   (numS 1))))
-    (letS 'resposta (numS -1)
-         (seqS (setS 'resposta
-                     (lamS 'x (numS 42)))
-    (letS 'fibo (numS -1)
-         (seqS (setS 'fibo
-                     (lamS 'n (ifS (varS 'n)
-                                   (ifS (plusS (varS 'n) (numS -1))
-                                        (plusS (appS (varS 'fibo) (plusS (varS 'n) (numS -1)))
-                                               (appS (varS 'fibo) (plusS (varS 'n) (numS -2))))
-                                        (numS 1))
-                                   (numS 0))))
-               (parse (read))))))))))))) mt-env mt-store)))
+(numV-n (v*s-v (interpS '(seq (:= oi (func x (+ x x))) 4))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; EXECUTANDO A ROTINA
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(numV-n (v*s-v (interpS (read))))
