@@ -35,27 +35,27 @@ O ";" cria o sequenciamento entre comandos.
 
 #### 0) Operações Básicas
 
-Os operadores básicos são *, /, +, -, responsáveis respectivamente por multiplicação, divisão, soma e subtração de expressões.
+Os operadores básicos são `*, /, +, -,` responsáveis respectivamente por multiplicação, divisão, soma e subtração de expressões.
 
 Para realizar uma operação, utiliza-se *expressao1* *operador* *expressao2*. 
 
 Exemplos:
 
-3*6
+`3*6`
 
-4*(10/2)
+`4*(10/2)`
 
 Além disso, existe o operador IF condicional, sua sintaxe é 
 
-(*condicao*) ? (*casoVerdadeiro*) (*casoFalso*)
+`(*condicao*) ? (*casoVerdadeiro*) (*casoFalso*)`
 
 Se condicao é igual a 0, casoFalso é executado. Caso contrário, casoVerdadeiro é executado.
 
 #### 1) Criação de variáveis e mutação
 
-Para definir uma variável, utiliza-se a sintaxe LET *nomevariavel* := (*valorinicial*); 
+Para definir uma variável, utiliza-se a sintaxe `LET *nomevariavel* := (*valorinicial*); `
 
-Para mudar o valor da variável, utiliza-se *nomevariavel* := (*novovalor*);
+Para mudar o valor da variável, utiliza-se `*nomevariavel* := (*novovalor*);`
 
 Exemplos:
 
@@ -84,9 +84,9 @@ $ ./tradutor | ./solver
 
 #### 2) Funções
 
-Para definir uma função, a sintaxe é FUNC *nomefuncao* (*parametro*) {*corpo*};
+Para definir uma função, a sintaxe é `FUNC *nomefuncao* (*parametro*) {*corpo*};`
 
-Para chamar uma função, utiliza-se CALL *nomefuncao* (*parametro*); 
+Para chamar uma função, utiliza-se `CALL *nomefuncao* (*parametro*); `
 
 As funções pré-implementadas são 
 
