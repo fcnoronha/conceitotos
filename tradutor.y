@@ -30,7 +30,6 @@ char *atrib(char *nome, char*value) {
 char *seq(char *exp1, char*exp2) {
     char *res = malloc(strlen(exp1)+strlen(exp2)+16);
     sprintf(res, "(seq %s %s)", exp1, exp2);
-    fprintf(stderr, "%s\n", res);
     return res;
 }
 
@@ -40,9 +39,9 @@ char *define(char *symbol, char*value, char*exp) {
     return res;
 }
 
-char *funcDef(char *nome, char*arg, char*body) {
-    char *res = malloc(strlen(nome)+strlen(arg)+strlen(body)+30);
-    sprintf(res, "(def %s -1 (:= %s (func %s %s)) )", nome, nome, arg, body);
+char *funcDef(char *nome, char*arg, char*body, char*exp) {
+    char *res = malloc(strlen(nome)+strlen(arg)+strlen(body)+strlen(exp)+30);
+    sprintf(res, "(func %s %s %s %s)", nome, arg, body, exp);
     return res;
 }
 
@@ -61,7 +60,7 @@ void yyerror(char *);
 
 %union {
     char *val;
-}
+}   
 
 %token  <val> NUM
 %token CALL
@@ -98,7 +97,7 @@ input:
 ;
 
 exp:            NUM         { $$ = dup($1);}
-        
+        |       NEWLINE exp { $$ = dup($2);}
         |       SYMBOL      { $$ = dup($1);}
         |       callfunc    { $$ = dup($1);}
         |       funcdef     { $$ = dup($1);}
@@ -119,8 +118,7 @@ callfunc:
 ;
 
 def:
-                DEF SYMBOL ATRIB exp SEQ exp { $$ = define(dup($2), dup($4), dup($6));}
-            |   DEF SYMBOL ATRIB exp SEQ NEWLINE exp { $$ = define(dup($2), dup($4), dup($7));}
+                DEF SYMBOL ATRIB OPEN exp CLOSE SEQ exp { $$ = define(dup($2), dup($5), dup($8));}
 ;
 
 atrib:
@@ -130,13 +128,12 @@ atrib:
 seq:
                 exp SEQ             { $$ = dup($1);}
             |   exp SEQ exp         { $$ = seq(dup($1), dup($3));}
-            |   exp SEQ NEWLINE exp { $$ = seq(dup($1), dup($4));}
             |   exp SEQ NEWLINE     { $$ = dup($1);}
 
 ;
 
 funcdef:
-                FUNC SYMBOL OPEN SYMBOL CLOSE OPENFUNC exp CLOSEFUNC  { $$ = funcDef(dup($2), dup($4), dup($7));}
+                FUNC SYMBOL OPEN SYMBOL CLOSE OPENFUNC exp CLOSEFUNC SEQ NEWLINE exp  { $$ = funcDef(dup($2), dup($4), dup($7), dup($11));}
 ;
 
 

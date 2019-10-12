@@ -207,7 +207,10 @@
                 [(:=)   (setS (s-exp->symbol (second sl)) (parse (third sl)))]
                 [(seq)  (seqS (parse (second sl)) (parse (third sl)))]
                 [(def) (letS (s-exp->symbol (second sl)) (parse (third sl)) (parse (fourth sl)))]
-                [(func) (lamS (s-exp->symbol (second sl)) (parse (third sl)))]
+                [(func) (letS (s-exp->symbol (second sl)) (numS -1)
+                                (seqS (setS (s-exp->symbol (second sl)) 
+                                (lamS (s-exp->symbol(third sl)) (parse (fourth sl)))) 
+                                (parse (list-ref sl 4) )) )  ]          
                 [else (error 'parse "invalid list input")]))]
     [else (error 'parse (s-exp->string s))]))
 

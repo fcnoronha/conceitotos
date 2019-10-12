@@ -74,7 +74,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 62 "tradutor.y" /* yacc.c:1909  */
+#line 61 "tradutor.y" /* yacc.c:1909  */
 
     char *val;
 
