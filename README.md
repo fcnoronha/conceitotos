@@ -120,16 +120,16 @@ $ ./tradutor | ./solver
 
 $ ./tradutor | ./solver
 FUNC tribonacci(x){
-    x ?
-      ((x-1) ?
-            ((x-2) ?
-              ( (CALL tribonacci(x-1)) + (CALL tribonacci(x-2)) + (CALL tribonacci(x-3)))
-              (2)
-              )
-            (1)
-              )
-          (0);
-};
+>    x ?
+>      ((x-1) ?
+>            ((x-2) ?
+>              ( (CALL tribonacci(x-1)) + (CALL tribonacci(x-2)) + (CALL tribonacci(x-3)))
+>              (2)
+>              )
+>            (1)
+>              )
+>          (0);
+> };
 > CALL tribonacci(5);
 > FIM
 11
@@ -139,4 +139,4 @@ FUNC tribonacci(x){
 
 - Carolina Senra Marques - NUSP: 10737101
 - Felipe Castro de Noronha - NUSP: 10737032
-- Raphael Ribeiro Costa e Silva - NUSP: 10281601
+- Raphael Ribeiro da Costa e Silva - NUSP: 10281601
